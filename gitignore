@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual Environment
+billing_env/
+venv/
+env/
+.venv/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Generated model files
+model/sklearn_model.pkl
+model/simple_model.npy
+model/labels.txt
+
+# Training images (large files)
+training_images/
+
+# Generated bills / QR codes
+bills/
+
+# Shared state files
+shared_cart.json
+capture_request.json
+capture_result.json
+
+# Logs
+*.log
+*.txt.log
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Secrets (never commit these)
+*.env
+.env
+config_local.py
