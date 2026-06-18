@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin — SmartBill</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0f12;--surface:#161920;--surface2:#1e2229;--border:#2a2f3a;
+      --accent:#00e5a0;--accent2:#0066ff;--warn:#ff6b35;--text:#e8eaf0;--muted:#6b7280;
+      --fh:'Syne',sans-serif;--fb:'DM Sans',sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);min-height:100vh;}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-family:var(--fh);font-size:20px;font-weight:800;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.nav a{color:var(--muted);text-decoration:none;font-size:14px;margin-left:20px;transition:color .2s;}
+.nav a:hover{color:var(--text);}
+.lo{background:var(--surface2);border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:6px;font-size:13px;text-decoration:none;transition:all .2s;}
+.lo:hover{border-color:var(--warn)!important;color:var(--warn)!important;}
+.con{max-width:1200px;margin:0 auto;padding:28px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;}
+.btn{padding:10px 20px;border-radius:8px;border:none;cursor:pointer;font-family:var(--fb);font-size:14px;font-weight:500;transition:all .2s;display:inline-flex;align-items:center;gap:6px;text-decoration:none;}
+.bp{background:var(--accent);color:#000;}.bp:hover{background:#00cc8f;}
+.bd{background:transparent;border:1px solid var(--warn);color:var(--warn);}.bd:hover{background:var(--warn);color:#fff;}
+.bs{background:var(--surface2);border:1px solid var(--border);color:var(--text);}.bs:hover{border-color:var(--accent);color:var(--accent);}
+input,select{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;font-family:var(--fb);font-size:14px;width:100%;outline:none;transition:border .2s;}
+input[type=file]{padding:8px 10px;}
+input:focus,select:focus{border-color:var(--accent);}
+label{font-size:13px;color:var(--muted);margin-bottom:6px;display:block;}
+h1,h2,h3{font-family:var(--fh);}
+.bg{padding:3px 10px;border-radius:20px;font-size:12px;font-weight:500;}
+.bgg{background:#00e5a020;color:var(--accent);border:1px solid #00e5a040;}
+.bgb{background:#0066ff20;color:#4d9fff;border:1px solid #0066ff40;}
+.bgw{background:#ff6b3520;color:var(--warn);border:1px solid #ff6b3540;}
+.fl{padding:12px 18px;border-radius:8px;margin-bottom:20px;font-size:14px;}
+.fls{background:#00e5a015;border:1px solid #00e5a030;color:var(--accent);}
+.fle{background:#ff6b3515;border:1px solid #ff6b3530;color:var(--warn);}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;padding:12px 16px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:1px solid var(--border);font-weight:500;}
+td{padding:14px 16px;border-bottom:1px solid var(--border);font-size:14px;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--surface2);}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;align-items:center;gap:16px;}
+.sv{font-family:var(--fh);font-size:28px;font-weight:800;color:var(--accent);}
+.tabs{display:flex;gap:4px;margin-bottom:24px;background:var(--surface);padding:4px;border-radius:10px;width:fit-content;flex-wrap:wrap;}
+.tab{padding:8px 20px;border-radius:7px;font-size:14px;cursor:pointer;color:var(--muted);border:none;background:transparent;font-family:var(--fb);transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;}
+.tab.active{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
+.tc{display:none;}.tc.active{display:block;}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-top:12px;}
+.pthumb{position:relative;border-radius:8px;overflow:hidden;border:2px solid var(--border);background:var(--surface2);aspect-ratio:1;}
+.pthumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.pthumb .pdel{position:absolute;top:3px;right:3px;background:#c62828cc;color:#fff;border:none;border-radius:4px;width:20px;height:20px;font-size:11px;cursor:pointer;opacity:0;transition:opacity .2s;display:flex;align-items:center;justify-content:center;}
+.pthumb:hover .pdel{opacity:1;}
+.pthumb.corrupt{border-color:var(--warn);}
+.pthumb.corrupt::after{content:'?';position:absolute;top:3px;left:4px;font-size:13px;}
+.pthumb .pnum{position:absolute;bottom:3px;left:4px;font-size:9px;color:rgba(255,255,255,.6);}
+#cambox{width:100%;border-radius:10px;border:1px solid var(--border);background:#000;max-height:280px;object-fit:cover;}
+.rot-btn{padding:6px 12px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:16px;transition:all .2s;}
+.rot-btn:hover{border-color:var(--accent);color:var(--accent);}
+.pbar-wrap{background:var(--surface2);border-radius:4px;height:6px;overflow:hidden;margin-top:6px;}
+.pbar{height:100%;background:var(--accent);border-radius:4px;transition:width .3s;}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="brand">SmartBill Admin</div>
+  <div><span class="bg bgw">Admin</span><a href="/logout" class="lo" style="margin-left:14px">Logout</a></div>
+</div>
+
+<div class="con">
+  {% if msg %}<div class="fl fls">{{ msg }}</div>{% endif %}
+  {% if err %}<div class="fl fle">{{ err }}</div>{% endif %}
+
+  <!-- Stats -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px">
+    <div class="sc"><div style="font-size:26px">📋</div><div><div class="sv">{{ s.total_bills }}</div><div style="font-size:13px;color:var(--muted)">Total Bills</div></div></div>
+    <div class="sc"><div style="font-size:26px">💰</div><div><div class="sv">₹{{ s.total_revenue }}</div><div style="font-size:13px;color:var(--muted)">Revenue</div></div></div>
+    <div class="sc"><div style="font-size:26px">📦</div><div><div class="sv">{{ s.total_products }}</div><div style="font-size:13px;color:var(--muted)">Products</div></div></div>
+    <div class="sc"><div style="font-size:26px">✅</div><div><div class="sv">{{ s.completed }}</div><div style="font-size:13px;color:var(--muted)">Completed</div></div></div>
+    <div class="sc"><div style="font-size:26px">🤖</div><div><div class="sv">{{ s.total_train }}</div><div style="font-size:13px;color:var(--muted)">Training Images</div></div></div>
+  </div>
+
+  <!-- Banners -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px">
+    <div style="background:linear-gradient(135deg,#00e5a015,#0066ff10);border:1px solid #00e5a030;border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px">
+      <div style="font-size:22px">💳</div>
+      <div><div style="font-size:14px;font-weight:500;color:var(--accent)">UPI Active</div>
+      <div style="font-size:13px;color:var(--muted)">→ <strong style="color:var(--text)">{{ upi_id }}</strong></div></div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px">
+      <div style="font-size:22px">🧠</div>
+      <div>
+        <div style="font-size:14px;font-weight:500;color:{% if s.model_exists %}var(--accent){% else %}var(--warn){% endif %}">
+          {% if s.model_exists %}Model active — {{ s.model_labels|length }} label(s){% else %}No model — train to enable detection{% endif %}
+        </div>
+        <div style="font-size:12px;color:var(--muted)">
+          {% if s.model_labels %}{{ s.model_labels|join(', ') }}{% else %}Upload images and click Train{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <a class="tab {% if active_tab=='bills' %}active{% endif %}" href="{{ url_for('admin', tab='bills') }}">Bills</a>
+    <a class="tab {% if active_tab=='products' %}active{% endif %}" href="{{ url_for('admin', tab='products') }}">Products</a>
+    <a class="tab {% if active_tab=='add' %}active{% endif %}" href="{{ url_for('admin', tab='add') }}">Add Product</a>
+    <a class="tab {% if active_tab=='train' %}active{% endif %}" href="{{ url_for('admin', tab='train') }}">🤖 Train AI</a>
+  </div>
+
+  <!-- BILLS TAB -->
+  <div class="tc card {% if active_tab=='bills' %}active{% endif %}" id="tab-bills">
+    {% if bills %}
+    <table>
+      <tr><th>Bill ID</th><th>Items</th><th>Total</th><th>Status</th><th>Date</th><th></th></tr>
+      {% for b in bills %}
+      <tr>
+        <td><code style="color:var(--accent);font-size:13px">{{ b.id }}</code></td>
+        <td style="color:var(--muted)">{{ b.item_count }} item(s)</td>
+        <td><strong style="color:var(--accent)">₹ {{ b.total }}</strong></td>
+        <td><span class="bg {% if b.status=='completed' %}bgg{% else %}bgw{% endif %}">{{ b.status }}</span></td>
+        <td style="color:var(--muted);font-size:13px">{{ b.created_at }}</td>
+        <td><a href="/bill_detail/{{ b.id }}" class="btn bs" style="padding:5px 12px;font-size:13px">View</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+    <div style="text-align:center;padding:40px;color:var(--muted)">No bills yet</div>
+    {% endif %}
+  </div>
+
+  <!-- PRODUCTS TAB -->
+  <div class="tc card {% if active_tab=='products' %}active{% endif %}" id="tab-products">
+    <table>
+      <tr><th>Name</th><th>Type</th><th>Price</th><th>Update Price</th><th>Delete</th></tr>
+      {% for p in products %}
+      <tr>
+        <td><strong>{{ p.name }}</strong></td>
+        <td><span class="bg {% if p.item_type=='weight' %}bgb{% else %}bgg{% endif %}">{{ p.item_type }}</span></td>
+        <td style="color:var(--accent)">
+          {% if p.item_type=='weight' %}₹{{ p.price_per_kg }}/kg{% else %}₹{{ p.fixed_price }} fixed{% endif %}
+        </td>
+        <td>
+          <form method="POST" action="/admin/update_price" style="display:flex;gap:8px;align-items:center">
+            <input type="hidden" name="product_id" value="{{ p.id }}">
+            <input type="hidden" name="item_type" value="{{ p.item_type }}">
+            <input name="new_price" type="number" step="0.01" placeholder="New price" style="width:110px;padding:6px 10px">
+            <button type="submit" class="btn bp" style="padding:6px 12px">Update</button>
+          </form>
+        </td>
+        <td>
+          <form method="POST" action="/admin/delete_product"
+            onsubmit="return confirm('Delete {{ p.name }}? This cannot be undone.')">
+            <input type="hidden" name="product_id" value="{{ p.id }}">
+            <button type="submit" class="btn bd" style="padding:6px 12px;font-size:12px">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <!-- ADD PRODUCT TAB -->
+  <div class="tc card {% if active_tab=='add' %}active{% endif %}" id="tab-add">
+    <h3 style="font-size:18px;margin-bottom:6px">Add New Product</h3>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:20px">
+      After adding, go to the <strong style="color:var(--text)">Train AI</strong> tab to capture photos and train the model.
+      The new product will be detected by main.py automatically after training — no restart needed.
+    </p>
+    <form method="POST" action="/admin/add_product">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+        <div><label>Product Name</label><input name="name" placeholder="e.g. Tomato" required></div>
+        <div><label>Item Type</label>
+          <select name="item_type" onchange="togglePF(this.value)">
+            <option value="weight">By Weight (per kg)</option>
+            <option value="fixed">Fixed Price</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+        <div id="fw"><label>Price per KG (₹)</label><input name="price_per_kg" type="number" step="0.01" placeholder="e.g. 25.00"></div>
+        <div id="ff" style="display:none"><label>Fixed Price (₹)</label><input name="fixed_price" type="number" step="0.01" placeholder="e.g. 20.00"></div>
+      </div>
+      <button type="submit" class="btn bp" style="padding:12px 28px">Add Product</button>
+    </form>
+  </div>
+
+  <!-- TRAIN AI TAB -->
+  <div class="tc {% if active_tab=='train' %}active{% endif %}" id="tab-train">
+
+    <!-- Model status + retrain -->
+    <div style="background:linear-gradient(135deg,#0066ff10,#00e5a010);border:1px solid #00e5a030;border-radius:12px;padding:18px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div>
+        <div style="font-size:15px;font-weight:500;margin-bottom:4px">
+          {% if s.model_exists %}Model Active &middot; {{ s.model_labels|length }} class(es){% else %}No model trained yet{% endif %}
+        </div>
+        <div style="font-size:13px;color:var(--muted)" id="retrain-status">
+          {% if s.model_labels %}Labels: {{ s.model_labels|join(', ') }}{% else %}Upload images and click Train{% endif %}
+        </div>
+      </div>
+      <button class="btn bp" id="retrain-btn" onclick="doRetrain()" style="padding:11px 24px">Train Model Now</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
+
+      <!-- Left: Capture -->
+      <div class="card">
+        <h3 style="font-size:16px;margin-bottom:14px">Capture from Pi Camera</h3>
+        <div style="margin-bottom:12px">
+          <label>Label (product to capture)</label>
+          <select id="cap-label" style="margin-bottom:10px">
+            {% for lbl in all_labels %}
+            <option value="{{ lbl }}">{{ lbl.capitalize() }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div style="margin-bottom:12px">
+          <label>Shots per click</label>
+          <select id="cap-count">
+            <option value="1">1 shot</option>
+            <option value="3" selected>3 shots</option>
+            <option value="5">5 shots</option>
+            <option value="10">10 shots</option>
+          </select>
+        </div>
+
+        <div style="position:relative;margin-bottom:10px">
+          <div id="cambox" style="width:100%;border-radius:10px;border:1px solid var(--border);background:#111;min-height:220px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:13px;padding:28px;line-height:1.6">
+            Live preview is disabled to avoid camera conflicts.<br>
+            Keep main.py running, then click Capture.
+          </div>
+        </div>
+
+        <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+          <span style="font-size:12px;color:var(--muted)">Rotate:</span>
+          <button class="rot-btn" onclick="rotateCam(-90)">Left 90</button>
+          <button class="rot-btn" onclick="rotateCam(90)">Right 90</button>
+          <button class="rot-btn" onclick="rotateCam(180)">Flip</button>
+          <button class="rot-btn" onclick="rotateCam(0,true)">Reset</button>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:12px">Rotation is baked into saved photos</div>
+
+        <div style="display:flex;gap:8px">
+          <button type="button" id="cap-btn" class="btn bp" style="flex:1;justify-content:center" onclick="startCapture()">Capture</button>
+        </div>
+        <div id="cap-status" style="margin-top:10px;font-size:13px;color:var(--muted);min-height:20px"></div>
+        <div id="cap-log" style="margin-top:8px;font-size:11px;color:var(--muted);max-height:120px;overflow-y:auto"></div>
+      </div>
+
+      <!-- Right: Upload + review -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <div class="card">
+          <h3 style="font-size:15px;margin-bottom:10px">Upload Images from Computer</h3>
+          <form method="POST" action="/admin/upload_training" enctype="multipart/form-data">
+            <div style="margin-bottom:12px">
+              <label>Label</label>
+              <select name="label">
+                {% for lbl in all_labels %}<option value="{{ lbl }}">{{ lbl.capitalize() }}</option>{% endfor %}
+              </select>
+            </div>
+            <div style="margin-bottom:12px">
+              <label>Images (JPG/PNG, multiple allowed)</label>
+              <input type="file" name="images" multiple accept="image/*" required>
+            </div>
+            <button type="submit" class="btn bp" style="padding:9px 20px">Upload</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:15px;margin-bottom:14px">Training Data &middot; {{ s.total_train }} total image(s)</h3>
+          {% if train_counts %}
+            {% for label, cnt in train_counts.items() %}
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+                <div>
+                  <strong>{{ label.capitalize() }}</strong>
+                  <span style="font-size:12px;color:var(--muted);margin-left:8px">{{ cnt }} image(s)</span>
+                </div>
+                <div style="display:flex;gap:6px">
+                  <button class="btn bs" id="view-btn-{{ label }}"
+                    data-label="{{ label }}"
+                    onclick="togglePhotos(this.dataset.label)"
+                    style="padding:3px 10px;font-size:12px">View Photos</button>
+                  <form method="POST" action="/admin/delete_label_images"
+                    onsubmit="return confirm('Delete ALL images for {{ label }}?');" style="display:inline">
+                    <input type="hidden" name="label" value="{{ label }}">
+                    <button type="submit" class="btn bd" style="padding:3px 10px;font-size:12px">Clear All</button>
+                  </form>
+                </div>
+              </div>
+              <div class="pbar-wrap">
+                <div class="pbar" style="width:{{ [100, cnt*10]|min }}%"></div>
+              </div>
+              <div id="photos-{{ label }}" style="display:none">
+                <div class="pgrid" id="grid-{{ label }}">
+                  <div style="color:var(--muted);font-size:12px;padding:8px">Loading...</div>
+                </div>
+                <div id="photo-msg-{{ label }}" style="font-size:12px;color:var(--accent);margin-top:4px"></div>
+              </div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div style="text-align:center;padding:28px;color:var(--muted)">
+              No training images yet. Capture or upload images above.
+            </div>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </div><!-- /tab-train -->
+
+</div><!-- /con -->
+
+<script>
+var camRot = 0;
+
+function togglePF(v) {
+  document.getElementById('fw').style.display = v === 'weight' ? 'block' : 'none';
+  document.getElementById('ff').style.display = v === 'fixed'  ? 'block' : 'none';
+}
+
+function rotateCam(deg, reset) {
+  camRot = reset ? 0 : (camRot + deg + 360) % 360;
+  document.getElementById('cambox').style.transform = 'rotate(' + camRot + 'deg)';
+}
+
+// ── Capture ────────────────────────────────────────────────────
+async function captureOne(label, shot, total) {
+  var logEl    = document.getElementById('cap-log');
+  var statusEl = document.getElementById('cap-status');
+  statusEl.style.color = 'var(--accent)';
+  statusEl.textContent = 'Shot ' + shot + '/' + total + ' — asking Pi camera...';
+  logEl.innerHTML = '<div>Starting shot ' + shot + '/' + total + '...</div>' + logEl.innerHTML;
+
+  var startResp;
+  try {
+    var r = await fetch('/admin/capture_start', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      cache: 'no-store',
+      body: JSON.stringify({label: label, rotation: camRot})
+    });
+    startResp = await r.json();
+  } catch(e) {
+    logEl.innerHTML = '<div style="color:var(--warn)">Network error: ' + e + '</div>' + logEl.innerHTML;
+    alert('Network error starting capture: ' + e);
+    return false;
+  }
+
+  if (!startResp.ok) {
+    var err = startResp.error || 'Could not start capture';
+    logEl.innerHTML = '<div style="color:var(--warn)">Shot ' + shot + ' error: ' + err + '</div>' + logEl.innerHTML;
+    alert('Capture error: ' + err);
+    return false;
+  }
+
+  var req_id   = startResp.req_id;
+  var dots     = 0;
+  var deadline = Date.now() + 15000;
+
+  while (Date.now() < deadline) {
+    await new Promise(function(res){ setTimeout(res, 500); });
+    dots = (dots + 1) % 4;
+    var dotStr = '';
+    for (var d = 0; d <= dots; d++) dotStr += '.';
+    statusEl.textContent = 'Shot ' + shot + '/' + total + ' — waiting for Pi' + dotStr;
+
+    var pollResp;
+    try {
+      var pr = await fetch('/admin/capture_poll/' + req_id, {cache: 'no-store'});
+      pollResp = await pr.json();
+    } catch(e) {
+      continue;
+    }
+
+    if (!pollResp.done) continue;
+
+    if (pollResp.ok) {
+      logEl.innerHTML = '<div style="color:var(--accent)">Shot ' + shot + ' saved!</div>' + logEl.innerHTML;
+      return true;
+    } else {
+      var errMsg = pollResp.error || 'Unknown error';
+      logEl.innerHTML = '<div style="color:var(--warn)">Shot ' + shot + ' failed: ' + errMsg + '</div>' + logEl.innerHTML;
+      alert('Shot ' + shot + ' failed:\n' + errMsg);
+      return false;
+    }
+  }
+
+  logEl.innerHTML = '<div style="color:var(--warn)">Shot ' + shot + ' timed out. Is main.py running?</div>' + logEl.innerHTML;
+  alert('Shot ' + shot + ' timed out (15s). Make sure main.py is running on the Pi.');
+  return false;
+}
+
+async function startCapture() {
+  var label = document.getElementById('cap-label').value;
+  if (!label) { alert('Please select a label first.'); return; }
+  var count    = parseInt(document.getElementById('cap-count').value);
+  var btn      = document.getElementById('cap-btn');
+  var logEl    = document.getElementById('cap-log');
+  var statusEl = document.getElementById('cap-status');
+
+  btn.disabled = true;
+  btn.textContent = 'Capturing...';
+  logEl.innerHTML = '';
+  statusEl.textContent = 'Starting capture for "' + label + '"...';
+  statusEl.style.color = 'var(--accent)';
+
+  var ok = 0;
+  for (var i = 1; i <= count; i++) {
+    var s = await captureOne(label, i, count);
+    if (s) ok++;
+    if (i < count) await new Promise(function(res){ setTimeout(res, 700); });
+  }
+
+  if (ok > 0) {
+    statusEl.textContent = ok + '/' + count + ' photos saved for "' + label + '". Click Train Model Now when ready.';
+    statusEl.style.color = 'var(--accent)';
+  } else {
+    statusEl.textContent = 'All ' + count + ' shots failed — see errors above.';
+    statusEl.style.color = 'var(--warn)';
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Capture';
+
+  var photoPanel = document.getElementById('photos-' + label);
+  if (photoPanel && photoPanel.style.display !== 'none') loadPhotos(label);
+}
+
+// ── Photo review ───────────────────────────────────────────────
+var _loadedPhotos = {};
+
+function togglePhotos(label) {
+  var panel = document.getElementById('photos-' + label);
+  var btn   = document.getElementById('view-btn-' + label);
+  if (panel.style.display === 'none') {
+    panel.style.display = 'block';
+    btn.textContent = 'Hide Photos';
+    if (!_loadedPhotos[label]) loadPhotos(label);
+  } else {
+    panel.style.display = 'none';
+    btn.textContent = 'View Photos';
+  }
+}
+
+function loadPhotos(label) {
+  _loadedPhotos[label] = true;
+  fetch('/admin/photos_for_label/' + label).then(function(r){ return r.json(); }).then(function(d) {
+    var grid = document.getElementById('grid-' + label);
+    if (!d.files || !d.files.length) {
+      grid.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:8px">No photos yet</div>';
+      return;
+    }
+    grid.innerHTML = d.files.map(function(f, i) {
+      return '<div class="pthumb" id="pt_' + label + '_' + f + '">'
+        + '<img src="/admin/training_image/' + label + '/' + f + '?t=' + Date.now() + '" loading="lazy"'
+        + ' onerror="this.parentElement.style.opacity=0.3">'
+        + '<button class="pdel" data-label="' + label + '" data-file="' + f + '"'
+        + ' onclick="deletePhoto(this.dataset.label, this.dataset.file)" title="Delete">x</button>'
+        + '<span class="pnum">#' + (i+1) + '</span></div>';
+    }).join('');
+  });
+}
+
+function deletePhoto(label, filename) {
+  fetch('/admin/delete_training_image', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({label: label, filename: filename})
+  }).then(function(r){ return r.json(); }).then(function(d) {
+    if (d.ok) {
+      var el = document.getElementById('pt_' + label + '_' + filename);
+      if (el) {
+        el.style.opacity = '0';
+        el.style.transition = 'opacity .2s';
+        setTimeout(function(){ el.remove(); }, 220);
+      }
+      var msgEl = document.getElementById('photo-msg-' + label);
+      if (msgEl) {
+        msgEl.textContent = 'Photo deleted.';
+        setTimeout(function(){ msgEl.textContent = ''; }, 3000);
+      }
+    } else {
+      alert('Delete failed: ' + (d.error || 'unknown'));
+    }
+  });
+}
+
+// ── Train model ────────────────────────────────────────────────
+var _trainTimer = null;
+
+function pollTrainStatus() {
+  fetch('/admin/train_poll').then(function(r){ return r.json(); }).then(function(d) {
+    var btn = document.getElementById('retrain-btn');
+    var st  = document.getElementById('retrain-status');
+    if (d.running) {
+      st.textContent = d.msg || 'Training...';
+      st.style.color = 'var(--accent)';
+      _trainTimer = setTimeout(pollTrainStatus, 800);
+    } else {
+      clearTimeout(_trainTimer);
+      btn.disabled   = false;
+      btn.textContent = 'Train Model Now';
+      if (d.msg) {
+        st.textContent = (d.ok ? 'Done: ' : 'Error: ') + d.msg;
+        st.style.color = d.ok ? 'var(--accent)' : 'var(--warn)';
+      }
+      if (d.ok) {
+        setTimeout(function(){ location.reload(); }, 2000);
+      } else if (d.msg) {
+        alert('Training failed: ' + d.msg);
+      }
+    }
+  }).catch(function(e) {
+    clearTimeout(_trainTimer);
+    var btn = document.getElementById('retrain-btn');
+    btn.disabled = false;
+    btn.textContent = 'Train Model Now';
+    alert('Poll error: ' + e);
+  });
+}
+
+function doRetrain() {
+  var btn = document.getElementById('retrain-btn');
+  var st  = document.getElementById('retrain-status');
+  btn.disabled    = true;
+  btn.textContent = 'Starting...';
+  st.textContent  = 'Sending request...';
+  st.style.color  = 'var(--accent)';
+
+  fetch('/admin/train_model', {method: 'POST'}).then(function(r){ return r.json(); }).then(function(d) {
+    if (d.ok) {
+      st.textContent  = d.msg || 'Training started...';
+      btn.textContent = 'Training...';
+      _trainTimer = setTimeout(pollTrainStatus, 1000);
+    } else {
+      btn.disabled    = false;
+      btn.textContent = 'Train Model Now';
+      st.textContent  = d.msg || 'Could not start training';
+      st.style.color  = 'var(--warn)';
+      alert('Could not start training: ' + (d.msg || 'unknown error'));
+    }
+  }).catch(function(e) {
+    btn.disabled    = false;
+    btn.textContent = 'Train Model Now';
+    st.textContent  = 'Error: ' + e;
+    st.style.color  = 'var(--warn)';
+    alert('Train request error: ' + e);
+  });
+}
+</script>
+
+</body>
+</html>
